@@ -1,8 +1,8 @@
 ---
 title: Wiki编写入门
-description: 
+description: Wiki编写入门
 published: true
-date: 2026-01-23T09:23:13.450Z
+date: 2026-01-23T09:24:39.565Z
 tags: 入门
 editor: markdown
 dateCreated: 2026-01-23T09:14:43.473Z
@@ -21,3 +21,4 @@ dateCreated: 2026-01-23T09:14:43.473Z
 2.进行如下操作
 ![snipaste_2026-01-23_17-19-58.png](/snipaste_2026-01-23_17-19-58.png)
 
+![snipaste_2026-01-23_17-23-48.png](/snipaste_2026-01-23_17-23-48.png)
