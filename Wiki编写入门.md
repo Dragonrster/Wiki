@@ -2,13 +2,13 @@
 title: Wiki编写入门
 description: 
 published: true
-date: 2026-01-23T09:22:42.847Z
+date: 2026-01-23T09:23:13.450Z
 tags: 入门
 editor: markdown
 dateCreated: 2026-01-23T09:14:43.473Z
 ---
 
-![snipaste_2026-01-23_17-10-52.png](/snipaste_2026-01-23_17-10-52.png)# Wiki编写入门
+# Wiki编写入门
 如果你想为之做出贡献可以向管理员申请编辑权限
 ## 申请权限
 1.将您的ID和邮箱发给管理员进行申请
