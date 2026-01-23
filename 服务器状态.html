@@ -1,0 +1,999 @@
+<!--
+title: 服务器状态
+description: 查看当前服务器的状态
+published: true
+date: 2026-01-23T11:01:19.681Z
+tags: 
+editor: code
+dateCreated: 2026-01-23T11:01:19.681Z
+-->
+
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>服务器状态监控</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+        
+        .status-container {
+            margin: 40px 0;
+        }
+        
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 15px;
+            padding: 20px 40px;
+            border-radius: 15px;
+            font-size: 1.3em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .status-dot {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+        
+        .status-online {
+            background: rgba(72, 187, 120, 0.1);
+            color: #48bb78;
+        }
+        
+        .status-online .status-dot {
+            background: #48bb78;
+            box-shadow: 0 0 20px rgba(72, 187, 120, 0.5);
+        }
+        
+        .status-offline {
+            background: rgba(245, 101, 101, 0.1);
+            color: #f56565;
+        }
+        
+        .status-offline .status-dot {
+            background: #f56565;
+            box-shadow: 0 0 20px rgba(245, 101, 101, 0.5);
+        }
+        
+        .status-checking {
+            background: rgba(237, 137, 54, 0.1);
+            color: #ed8936;
+        }
+        
+        .status-checking .status-dot {
+            background: #ed8936;
+            box-shadow: 0 0 20px rgba(237, 137, 54, 0.5);
+            animation: pulse 1.5s infinite;
+        }
+        
+        .info-box {
+            background: #f7fafc;
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 30px;
+            text-align: left;
+        }
+        
+        .info-box h3 {
+            color: #4a5568;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+        
+        .info-box ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .info-box li {
+            padding: 8px 0;
+            color: #718096;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .info-box li:last-child {
+            border-bottom: none;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .btn-check {
+            background: linear-gradient(135deg, #4299e1, #3182ce);
+            color: white;
+        }
+        
+        .btn-check:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(66, 153, 225, 0.3);
+        }
+        
+        .btn-config {
+            background: #e2e8f0;
+            color: #4a5568;
+        }
+        
+        .btn-config:hover {
+            background: #cbd5e0;
+        }
+        
+        .config-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 500px;
+        }
+        
+        .modal-content h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #4a5568;
+            font-weight: 500;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #4299e1;
+        }
+        
+        .btn-save {
+            background: #48bb78;
+            color: white;
+            width: 100%;
+            justify-content: center;
+        }
+        
+        .btn-save:hover {
+            background: #38a169;
+        }
+        
+        .btn-close {
+            background: #e53e3e;
+            color: white;
+            margin-top: 15px;
+            width: 100%;
+            justify-content: center;
+        }
+        
+        .last-check {
+            margin-top: 20px;
+            color: #718096;
+            font-size: 0.9em;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .server-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        .info-item {
+            background: #f7fafc;
+            padding: 15px;
+            border-radius: 10px;
+            min-width: 150px;
+        }
+        
+        .info-item .label {
+            font-size: 0.9em;
+            color: #718096;
+        }
+        
+        .info-item .value {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #2d3748;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 服务器状态监控</h1>
+        
+        <div class="status-container">
+            <div id="status" class="status-indicator status-checking">
+                <div class="status-dot"></div>
+                <span>检测中...</span>
+            </div>
+        </div>
+        
+        <div class="server-info">
+            <div class="info-item">
+                <div class="label">服务器地址</div>
+                <div id="serverUrl" class="value">-</div>
+            </div>
+            <div class="info-item">
+                <div class="label">响应时间</div>
+                <div id="responseTime" class="value">-</div>
+            </div>
+            <div class="info-item">
+                <div class="label">最后检查</div>
+                <div id="lastCheck" class="value">-</div>
+            </div>
+        </div>
+        
+        <div class="info-box">
+            <h3>📊 状态说明</h3>
+            <ul>
+                <li>✅ <strong>在线</strong>: 服务器可正常访问</li>
+                <li>❌ <strong>离线</strong>: 服务器无法访问</li>
+                <li>⏳ <strong>检测中</strong>: 正在检查服务器状态</li>
+                <li>⚠️ <strong>注意</strong>: 本工具通过向指定URL发送请求来检测状态</li>
+            </ul>
+        </div>
+        
+        <div class="controls">
+            <button id="checkBtn" class="btn-check">
+                <span>🔄</span> 立即检查
+            </button>
+            <button id="configBtn" class="btn-config">
+                <span>⚙️</span> 配置服务器
+            </button>
+        </div>
+        
+        <div id="lastCheckTime" class="last-check"></div>
+    </div>
+    
+    <div id="configModal" class="config-modal">
+        <div class="modal-content">
+            <h2>⚙️ 配置监控服务器</h2>
+            <div class="form-group">
+                <label for="serverUrlInput">服务器URL地址</label>
+                <input type="text" id="serverUrlInput" placeholder="https://example.com" value="">
+            </div>
+            <div class="form-group">
+                <label for="checkFile">检测文件路径（可选）</label>
+                <input type="text" id="checkFile" placeholder="/favicon.ico 或 /index.html" value="/favicon.ico">
+            </div>
+            <button id="saveConfig" class="btn-save">💾 保存设置</button>
+            <button id="closeConfig" class="btn-close">❌ 关闭</button>
+        </div>
+    </div>
+
+    <script>
+        class ServerMonitor {
+            constructor() {
+                this.config = {
+                    serverUrl: '',
+                    checkFile: '/favicon.ico',
+                    checkInterval: 30000 // 30秒
+                };
+                
+                this.init();
+            }
+            
+            init() {
+                this.loadConfig();
+                this.bindEvents();
+                this.checkStatus();
+                this.startAutoCheck();
+            }
+            
+            loadConfig() {
+                const saved = localStorage.getItem('serverMonitorConfig');
+                if (saved) {
+                    this.config = { ...this.config, ...JSON.parse(saved) };
+                }
+                
+                if (!this.config.serverUrl) {
+                    // 如果没有配置，尝试使用当前域名
+                    this.config.serverUrl = window.location.origin;
+                }
+                
+                document.getElementById('serverUrl').textContent = this.config.serverUrl;
+                document.getElementById('serverUrlInput').value = this.config.serverUrl;
+                document.getElementById('checkFile').value = this.config.checkFile;
+            }
+            
+            saveConfig() {
+                this.config.serverUrl = document.getElementById('serverUrlInput').value.trim();
+                this.config.checkFile = document.getElementById('checkFile').value.trim();
+                localStorage.setItem('serverMonitorConfig', JSON.stringify(this.config));
+                document.getElementById('serverUrl').textContent = this.config.serverUrl;
+                this.closeConfigModal();
+                this.checkStatus();
+            }
+            
+            bindEvents() {
+                document.getElementById('checkBtn').addEventListener('click', () => this.checkStatus());
+                document.getElementById('configBtn').addEventListener('click', () => this.openConfigModal());
+                document.getElementById('saveConfig').addEventListener('click', () => this.saveConfig());
+                document.getElementById('closeConfig').addEventListener('click', () => this.closeConfigModal());
+                
+                // 点击模态框外部关闭
+                document.getElementById('configModal').addEventListener('click', (e) => {
+                    if (e.target.id === 'configModal') this.closeConfigModal();
+                });
+            }
+            
+            openConfigModal() {
+                document.getElementById('configModal').style.display = 'flex';
+            }
+            
+            closeConfigModal() {
+                document.getElementById('configModal').style.display = 'none';
+            }
+            
+            setStatus(status, responseTime = null) {
+                const statusEl = document.getElementById('status');
+                const timeEl = document.getElementById('responseTime');
+                const lastCheckEl = document.getElementById('lastCheck');
+                
+                // 移除所有状态类
+                statusEl.className = 'status-indicator';
+                
+                if (status === 'online') {
+                    statusEl.className = 'status-indicator status-online';
+                    statusEl.innerHTML = '<div class="status-dot"></div><span>✅ 服务器在线</span>';
+                    if (responseTime) {
+                        timeEl.textContent = `${responseTime}ms`;
+                        timeEl.style.color = responseTime < 100 ? '#48bb78' : 
+                                            responseTime < 500 ? '#ed8936' : '#f56565';
+                    }
+                } else if (status === 'offline') {
+                    statusEl.className = 'status-indicator status-offline';
+                    statusEl.innerHTML = '<div class="status-dot"></div><span>❌ 服务器离线</span>';
+                    timeEl.textContent = '-';
+                } else {
+                    statusEl.className = 'status-indicator status-checking';
+                    statusEl.innerHTML = '<div class="status-dot"></div><span>⏳ 检测中...</span>';
+                }
+                
+                // 更新最后检查时间
+                const now = new Date();
+                lastCheckEl.textContent = now.toLocaleTimeString();
+                
+                // 更新底部时间显示
+                const lastCheckTimeEl = document.getElementById('lastCheckTime');
+                lastCheckTimeEl.textContent = `最后检查: ${now.toLocaleString()}`;
+            }
+            
+            async checkStatus() {
+                this.setStatus('checking');
+                
+                if (!this.config.serverUrl) {
+                    this.setStatus('offline');
+                    alert('请先配置服务器地址');
+                    this.openConfigModal();
+                    return;
+                }
+                
+                try {
+                    const startTime = Date.now();
+                    const testUrl = `${this.config.serverUrl.replace(/\/$/, '')}${this.config.checkFile}`;
+                    
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), 10000);
+                    
+                    const response = await fetch(testUrl, {
+                        method: 'HEAD',
+                        mode: 'no-cors',
+                        cache: 'no-cache',
+                        signal: controller.signal
+                    }).catch(() => {
+                        // 如果HEAD请求失败，尝试GET请求
+                        return fetch(testUrl, {
+                            method: 'GET',
+                            mode: 'no-cors',
+                            cache: 'no-cache',
+                            signal: controller.signal
+                        });
+                    });
+                    
+                    clearTimeout(timeoutId);
+                    
+                    const responseTime = Date.now() - startTime;
+                    
+                    // 如果使用了no-cors模式，response可能是opaque类型
+                    // 这种情况下只要没有出错，我们就认为服务器在线
+                    this.setStatus('online', responseTime);
+                    
+                } catch (error) {
+                    console.error('检查服务器状态失败:', error);
+                    this.setStatus('offline');
+                }
+            }
+            
+            startAutoCheck() {
+                // 初始检查
+                this.checkStatus();
+                
+                // 定时检查
+                setInterval(() => {
+                    this.checkStatus();
+                }, this.config.checkInterval);
+            }
+        }
+        
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            window.monitor = new ServerMonitor();
+        });
+    </script>
+</body>
+</html><!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>服务器状态监控</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+        
+        .status-container {
+            margin: 40px 0;
+        }
+        
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 15px;
+            padding: 20px 40px;
+            border-radius: 15px;
+            font-size: 1.3em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .status-dot {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+        
+        .status-online {
+            background: rgba(72, 187, 120, 0.1);
+            color: #48bb78;
+        }
+        
+        .status-online .status-dot {
+            background: #48bb78;
+            box-shadow: 0 0 20px rgba(72, 187, 120, 0.5);
+        }
+        
+        .status-offline {
+            background: rgba(245, 101, 101, 0.1);
+            color: #f56565;
+        }
+        
+        .status-offline .status-dot {
+            background: #f56565;
+            box-shadow: 0 0 20px rgba(245, 101, 101, 0.5);
+        }
+        
+        .status-checking {
+            background: rgba(237, 137, 54, 0.1);
+            color: #ed8936;
+        }
+        
+        .status-checking .status-dot {
+            background: #ed8936;
+            box-shadow: 0 0 20px rgba(237, 137, 54, 0.5);
+            animation: pulse 1.5s infinite;
+        }
+        
+        .info-box {
+            background: #f7fafc;
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 30px;
+            text-align: left;
+        }
+        
+        .info-box h3 {
+            color: #4a5568;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+        
+        .info-box ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .info-box li {
+            padding: 8px 0;
+            color: #718096;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .info-box li:last-child {
+            border-bottom: none;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .btn-check {
+            background: linear-gradient(135deg, #4299e1, #3182ce);
+            color: white;
+        }
+        
+        .btn-check:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(66, 153, 225, 0.3);
+        }
+        
+        .btn-config {
+            background: #e2e8f0;
+            color: #4a5568;
+        }
+        
+        .btn-config:hover {
+            background: #cbd5e0;
+        }
+        
+        .config-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 500px;
+        }
+        
+        .modal-content h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #4a5568;
+            font-weight: 500;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #4299e1;
+        }
+        
+        .btn-save {
+            background: #48bb78;
+            color: white;
+            width: 100%;
+            justify-content: center;
+        }
+        
+        .btn-save:hover {
+            background: #38a169;
+        }
+        
+        .btn-close {
+            background: #e53e3e;
+            color: white;
+            margin-top: 15px;
+            width: 100%;
+            justify-content: center;
+        }
+        
+        .last-check {
+            margin-top: 20px;
+            color: #718096;
+            font-size: 0.9em;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .server-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        .info-item {
+            background: #f7fafc;
+            padding: 15px;
+            border-radius: 10px;
+            min-width: 150px;
+        }
+        
+        .info-item .label {
+            font-size: 0.9em;
+            color: #718096;
+        }
+        
+        .info-item .value {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #2d3748;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 服务器状态监控</h1>
+        
+        <div class="status-container">
+            <div id="status" class="status-indicator status-checking">
+                <div class="status-dot"></div>
+                <span>检测中...</span>
+            </div>
+        </div>
+        
+        <div class="server-info">
+            <div class="info-item">
+                <div class="label">服务器地址</div>
+                <div id="serverUrl" class="value">-</div>
+            </div>
+            <div class="info-item">
+                <div class="label">响应时间</div>
+                <div id="responseTime" class="value">-</div>
+            </div>
+            <div class="info-item">
+                <div class="label">最后检查</div>
+                <div id="lastCheck" class="value">-</div>
+            </div>
+        </div>
+        
+        <div class="info-box">
+            <h3>📊 状态说明</h3>
+            <ul>
+                <li>✅ <strong>在线</strong>: 服务器可正常访问</li>
+                <li>❌ <strong>离线</strong>: 服务器无法访问</li>
+                <li>⏳ <strong>检测中</strong>: 正在检查服务器状态</li>
+                <li>⚠️ <strong>注意</strong>: 本工具通过向指定URL发送请求来检测状态</li>
+            </ul>
+        </div>
+        
+        <div class="controls">
+            <button id="checkBtn" class="btn-check">
+                <span>🔄</span> 立即检查
+            </button>
+            <button id="configBtn" class="btn-config">
+                <span>⚙️</span> 配置服务器
+            </button>
+        </div>
+        
+        <div id="lastCheckTime" class="last-check"></div>
+    </div>
+    
+    <div id="configModal" class="config-modal">
+        <div class="modal-content">
+            <h2>⚙️ 配置监控服务器</h2>
+            <div class="form-group">
+                <label for="serverUrlInput">服务器URL地址</label>
+                <input type="text" id="serverUrlInput" placeholder="https://example.com" value="">
+            </div>
+            <div class="form-group">
+                <label for="checkFile">检测文件路径（可选）</label>
+                <input type="text" id="checkFile" placeholder="/favicon.ico 或 /index.html" value="/favicon.ico">
+            </div>
+            <button id="saveConfig" class="btn-save">💾 保存设置</button>
+            <button id="closeConfig" class="btn-close">❌ 关闭</button>
+        </div>
+    </div>
+
+    <script>
+        class ServerMonitor {
+            constructor() {
+                this.config = {
+                    serverUrl: '',
+                    checkFile: '/favicon.ico',
+                    checkInterval: 30000 // 30秒
+                };
+                
+                this.init();
+            }
+            
+            init() {
+                this.loadConfig();
+                this.bindEvents();
+                this.checkStatus();
+                this.startAutoCheck();
+            }
+            
+            loadConfig() {
+                const saved = localStorage.getItem('serverMonitorConfig');
+                if (saved) {
+                    this.config = { ...this.config, ...JSON.parse(saved) };
+                }
+                
+                if (!this.config.serverUrl) {
+                    // 如果没有配置，尝试使用当前域名
+                    this.config.serverUrl = window.location.origin;
+                }
+                
+                document.getElementById('serverUrl').textContent = this.config.serverUrl;
+                document.getElementById('serverUrlInput').value = this.config.serverUrl;
+                document.getElementById('checkFile').value = this.config.checkFile;
+            }
+            
+            saveConfig() {
+                this.config.serverUrl = document.getElementById('serverUrlInput').value.trim();
+                this.config.checkFile = document.getElementById('checkFile').value.trim();
+                localStorage.setItem('serverMonitorConfig', JSON.stringify(this.config));
+                document.getElementById('serverUrl').textContent = this.config.serverUrl;
+                this.closeConfigModal();
+                this.checkStatus();
+            }
+            
+            bindEvents() {
+                document.getElementById('checkBtn').addEventListener('click', () => this.checkStatus());
+                document.getElementById('configBtn').addEventListener('click', () => this.openConfigModal());
+                document.getElementById('saveConfig').addEventListener('click', () => this.saveConfig());
+                document.getElementById('closeConfig').addEventListener('click', () => this.closeConfigModal());
+                
+                // 点击模态框外部关闭
+                document.getElementById('configModal').addEventListener('click', (e) => {
+                    if (e.target.id === 'configModal') this.closeConfigModal();
+                });
+            }
+            
+            openConfigModal() {
+                document.getElementById('configModal').style.display = 'flex';
+            }
+            
+            closeConfigModal() {
+                document.getElementById('configModal').style.display = 'none';
+            }
+            
+            setStatus(status, responseTime = null) {
+                const statusEl = document.getElementById('status');
+                const timeEl = document.getElementById('responseTime');
+                const lastCheckEl = document.getElementById('lastCheck');
+                
+                // 移除所有状态类
+                statusEl.className = 'status-indicator';
+                
+                if (status === 'online') {
+                    statusEl.className = 'status-indicator status-online';
+                    statusEl.innerHTML = '<div class="status-dot"></div><span>✅ 服务器在线</span>';
+                    if (responseTime) {
+                        timeEl.textContent = `${responseTime}ms`;
+                        timeEl.style.color = responseTime < 100 ? '#48bb78' : 
+                                            responseTime < 500 ? '#ed8936' : '#f56565';
+                    }
+                } else if (status === 'offline') {
+                    statusEl.className = 'status-indicator status-offline';
+                    statusEl.innerHTML = '<div class="status-dot"></div><span>❌ 服务器离线</span>';
+                    timeEl.textContent = '-';
+                } else {
+                    statusEl.className = 'status-indicator status-checking';
+                    statusEl.innerHTML = '<div class="status-dot"></div><span>⏳ 检测中...</span>';
+                }
+                
+                // 更新最后检查时间
+                const now = new Date();
+                lastCheckEl.textContent = now.toLocaleTimeString();
+                
+                // 更新底部时间显示
+                const lastCheckTimeEl = document.getElementById('lastCheckTime');
+                lastCheckTimeEl.textContent = `最后检查: ${now.toLocaleString()}`;
+            }
+            
+            async checkStatus() {
+                this.setStatus('checking');
+                
+                if (!this.config.serverUrl) {
+                    this.setStatus('offline');
+                    alert('请先配置服务器地址');
+                    this.openConfigModal();
+                    return;
+                }
+                
+                try {
+                    const startTime = Date.now();
+                    const testUrl = `${this.config.serverUrl.replace(/\/$/, '')}${this.config.checkFile}`;
+                    
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), 10000);
+                    
+                    const response = await fetch(testUrl, {
+                        method: 'HEAD',
+                        mode: 'no-cors',
+                        cache: 'no-cache',
+                        signal: controller.signal
+                    }).catch(() => {
+                        // 如果HEAD请求失败，尝试GET请求
+                        return fetch(testUrl, {
+                            method: 'GET',
+                            mode: 'no-cors',
+                            cache: 'no-cache',
+                            signal: controller.signal
+                        });
+                    });
+                    
+                    clearTimeout(timeoutId);
+                    
+                    const responseTime = Date.now() - startTime;
+                    
+                    // 如果使用了no-cors模式，response可能是opaque类型
+                    // 这种情况下只要没有出错，我们就认为服务器在线
+                    this.setStatus('online', responseTime);
+                    
+                } catch (error) {
+                    console.error('检查服务器状态失败:', error);
+                    this.setStatus('offline');
+                }
+            }
+            
+            startAutoCheck() {
+                // 初始检查
+                this.checkStatus();
+                
+                // 定时检查
+                setInterval(() => {
+                    this.checkStatus();
+                }, this.config.checkInterval);
+            }
+        }
+        
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            window.monitor = new ServerMonitor();
+        });
+    </script>
+</body>
+</html>
