@@ -2,7 +2,7 @@
 title: Wiki编写入门
 description: 
 published: true
-date: 2026-01-23T09:14:43.473Z
+date: 2026-01-23T09:21:08.417Z
 tags: 入门
 editor: markdown
 dateCreated: 2026-01-23T09:14:43.473Z
@@ -16,3 +16,7 @@ dateCreated: 2026-01-23T09:14:43.473Z
 2.查看自己的用户组是否为Administrators或者Editor，如果匹配则代表申请成功
 ![snipaste_2026-01-23_17-12-44.png](/snipaste_2026-01-23_17-12-44.png)
 
+## 新建页面
+1.选择画面右上角的![snipaste_2026-01-23_17-16-57.png](/snipaste_2026-01-23_17-16-57.png)
+2.进行如下操作
+![snipaste_2026-01-23_17-19-58.png](/snipaste_2026-01-23_17-19-58.png)
