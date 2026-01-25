@@ -2,7 +2,7 @@
 title: WikiJS搭建
 description: 快速搭建说明
 published: true
-date: 2026-01-25T13:23:05.537Z
+date: 2026-01-25T13:26:19.790Z
 tags: 
 editor: markdown
 dateCreated: 2026-01-25T09:38:22.037Z
@@ -34,7 +34,7 @@ services:
       POSTGRES_PASSWORD_FILE: /etc/wiki/.db-secret
     volumes:
       - /etc/wiki/.db-secret:/etc/wiki/.db-secret:ro
-      - pgdata:/var/lib/postgresql/data
+      - /etc/wiki/pgdata:/var/lib/postgresql/data
 
   wiki:
     image: ghcr.io/requarks/wiki:2
