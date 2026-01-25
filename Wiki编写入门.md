@@ -2,7 +2,7 @@
 title: Wiki编写入门
 description: Wiki编写入门
 published: true
-date: 2026-01-24T05:33:04.615Z
+date: 2026-01-25T08:55:16.442Z
 tags: 入门
 editor: markdown
 dateCreated: 2026-01-23T09:14:43.473Z
@@ -62,7 +62,7 @@ dateCreated: 2026-01-23T09:14:43.473Z
 - 适当使用图片、表格、列表增强可读性
 - 为页面添加合适的分类标签
 - 遵循统一的格式规范
-- 图片请归类到`/media`文件夹
+- **图片请归类到`/media`文件夹，可以使用子目录进行页面资分类**
 
 ---
 
