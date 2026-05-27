@@ -1,11 +1,11 @@
 ---
 title: Wiki编写入门
-description: Wiki编写入门
+description: Wiki编写入门的基础入门教程
 published: true
-date: 2026-01-25T09:24:11.289Z
-tags: 入门
+date: 2026-05-27T01:44:06.565Z
+tags: 入门, 教程
 editor: markdown
-dateCreated: 2026-01-23T09:14:43.473Z
+dateCreated: 2026-05-21T17:02:15.918Z
 ---
 
 #  Wiki 编写入门
