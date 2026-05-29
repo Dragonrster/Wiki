@@ -1,3 +1,13 @@
+---
+title: README
+description: 
+published: false
+date: 2026-05-29T02:33:22.344Z
+tags: 
+editor: markdown
+dateCreated: 2026-05-21T17:02:12.878Z
+---
+
 # 盘龙阁七代目（盘灵古域）Wiki
 
 > **正式上线时间：2024 年 9 月 15 日**  
