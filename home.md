@@ -2,7 +2,7 @@
 title: 主页
 description: 
 published: true
-date: 2026-08-12T15:07:51.485Z
+date: 2026-08-12T15:11:39.060Z
 tags: 主页
 editor: markdown
 dateCreated: 2026-01-21T09:59:01.604Z
@@ -85,7 +85,7 @@ dateCreated: 2026-01-21T09:59:01.604Z
 
 如果出现如下情况：
 - 物品材质被莫名拉伸
-- 画面渲染异常 / 显示错乱
+- 画面渲染异常 / 显示错乱 
 
 建议处理方式：
 1. 尝试卸载相关 mod
