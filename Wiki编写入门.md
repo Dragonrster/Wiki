@@ -2,7 +2,7 @@
 title: Wiki编写入门教程
 description: Wiki编写入门的基础入门教程
 published: true
-date: 2026-07-15T17:21:15.360Z
+date: 2026-08-16T14:05:39.305Z
 tags: 入门, 教程
 editor: markdown
 dateCreated: 2026-05-21T17:02:15.918Z
