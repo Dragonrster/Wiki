@@ -2,13 +2,13 @@
 title: 主页
 description: 
 published: true
-date: 2026-08-16T14:05:40.447Z
+date: 2026-09-17T03:18:14.166Z
 tags: 主页
 editor: markdown
 dateCreated: 2026-01-21T09:59:01.604Z
 ---
 
-# 盘龙阁七代目（盘灵古域）Wiki 
+# 盘龙阁七代目（盘灵古域）Wiki
 
 > **正式上线时间：2024 年 9 月 15 日**  
 > 服务器版本：Java 1.21.3
