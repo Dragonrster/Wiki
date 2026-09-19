@@ -2,7 +2,7 @@
 title: 战士/锻造配方(战士)
 description: 材料汇总
 published: true
-date: 2026-09-19T04:02:38.923Z
+date: 2026-09-19T04:07:39.554Z
 tags: 战士 锻造
 editor: markdown
 dateCreated: 2026-09-19T01:57:59.537Z
