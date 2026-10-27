@@ -2,7 +2,7 @@
 title: 主页
 description: 
 published: true
-date: 2026-10-25T11:28:06.793Z
+date: 2026-10-27T14:39:51.617Z
 tags: 主页
 editor: markdown
 dateCreated: 2026-01-21T09:59:01.604Z
@@ -26,7 +26,7 @@ dateCreated: 2026-01-21T09:59:01.604Z
 <div class="pl-card"><span class="pl-ico pl-i-core"></span><div class="pl-card-t">装备与锻造</div><ul class="pl-links"><li><a href="/系统/装备系统">装备系统</a></li><li><a href="/职业/战士/锻造配方">战士锻造配方</a></li><li><a href="/职业/弓箭手/锻造配方">弓箭手锻造配方</a></li><li><a href="/职业/阵法师/锻造配方">阵法师锻造配方</a></li></ul></div>
 <div class="pl-card"><span class="pl-ico pl-i-compass"></span><div class="pl-card-t">武器与法宝</div><ul class="pl-links"><li><a href="/装备/阵法师/武器/燃火">燃火</a></li><li><a href="/装备/阵法师/武器/九黎壶">九黎壶</a></li><li><a href="/装备/阵法师/法宝/阴阳扇">阴阳扇</a></li><li><a href="/装备/通用/法宝/卦象罗盘">卦象罗盘</a></li><li><a href="/装备/通用/法宝/镇国玉玺">镇国玉玺</a></li></ul></div>
 <div class="pl-card pl-wide"><span class="pl-ico pl-i-totem"></span><div class="pl-card-t">副本</div><ul class="pl-links"><li><a href="/副本相关/全副本攻略">全副本攻略</a></li><li><a href="/副本相关/副本掉落">副本掉落</a></li><li><a href="/副本相关/副本须知">副本奖励机制</a></li><li><a href="/副本相关/征讨队">征讨队</a></li><li><a href="/副本相关/烧火境">烧火境</a></li><li><a href="/副本相关/山神庙">山神庙（峻极殿）</a></li><li><a href="/副本相关/西岳庙（集灵宫）">西岳庙（集灵宫）</a></li><li><a href="/副本相关/圣山">圣山</a></li><li><a href="/副本相关/东海仙岛">东海仙岛</a></li><li><a href="/副本相关/精卫填海">精卫填海</a></li></ul></div>
-<div class="pl-card"><span class="pl-ico pl-i-money"></span><div class="pl-card-t">查询</div><ul class="pl-links"><li><a href="/系统/资源点位指南">资源点位</a></li><li><a href="/玩家攻略/材料价位参考">材料价位</a></li><li><a href="/系统/战役模式">战役模式</a></li></ul></div>
+<div class="pl-card"><span class="pl-ico pl-i-money"></span><div class="pl-card-t">查询</div><ul class="pl-links"><li><a href="/系统/全怪物刷新点、全资源采集点">资源点位</a></li><li><a href="/玩家攻略/材料价位参考">材料价位</a></li><li><a href="/系统/战役模式">战役模式</a></li></ul></div>
 </div>
 <h2 id="本周目核心改动一览">本周目核心改动一览</h2>
 <ol class="pl-changes">
